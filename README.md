@@ -25,9 +25,13 @@ Baseado [neste post](https://martinfowler.com/articles/practical-test-pyramid.ht
 
 A aplicação fornece três endponts:
 
-`GET /hello: Retorna "Hello World!". `
-`GET /hello/{lastname}: Procura no banco de dados a pessoa pelo seu sobrenome e retorna "Hello {Firstname} {Lastname}" se a pessoa é encontrada. Retorna 404 caso não encontrada.`
-`GET /weather: Chama uma API de previsão do tempo via HTTP e retorna as condições de Florianópolis, Brasil` ;)
+```
+
+GET /hello: Retorna "Hello World!". 
+GET /hello/{lastname}: Procura no banco de dados a pessoa pelo seu sobrenome e retorna "Hello {Firstname} {Lastname}" se a pessoa é encontrada. Retorna 404 caso não encontrada.
+GET /weather: Chama uma API de previsão do tempo via HTTP e retorna as condições de Florianópolis, Brasil` ;)
+
+```
 
 
 ## Arquitetura interna
