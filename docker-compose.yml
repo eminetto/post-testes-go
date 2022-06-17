@@ -1,0 +1,16 @@
+version: "3"
+services:
+  mysql:
+    image: mariadb:latest
+    command: --init-file /data/application/init.sql
+    volumes:
+      - ./ops/db/init.sql:/data/application/init.sql
+    environment:
+      MARIADB_USER: workshop
+      MARIADB_PASSWORD: workshop
+      MARIADB_ROOT_PASSWORD: db-root-password
+      MARIADB_DATABASE: workshop
+    ports:
+      - "3306:3306"
+    container_name: workshop-mysql
+    network_mode: "bridge"
