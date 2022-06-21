@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"github.com/PicPay/go-test-workshop/api"
 	infra "github.com/PicPay/go-test-workshop/infraestructure/repository/person"
-	usecase "github.com/PicPay/go-test-workshop/usecase/person"
+	"github.com/PicPay/go-test-workshop/usecase/person"
+	"github.com/PicPay/go-test-workshop/usecase/weather"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
 	"log"
@@ -25,10 +26,14 @@ func main() {
 		log.Fatal(err)
 	}
 	repo := infra.NewMySQL(db)
-	service := usecase.NewService(repo)
+	pService := person.NewService(repo)
+
+	wService := weather.NewService("71a80f2a4b098e54c044cb04a8fac7bb") //@todo pegar de config
+
 	e := echo.New()
 	e.GET("/hello", api.Hello)
-	e.GET("/hello/:lastname", api.GetUser(service))
+	e.GET("/hello/:lastname", api.GetUser(pService))
+	e.GET("/weather/:lat/:long", api.Weather(wService))
 	e.Logger.Fatal(e.Start(":8000"))
 
 }

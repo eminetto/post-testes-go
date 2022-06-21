@@ -15,6 +15,8 @@ e2e:
 
 generate-mocks:
 	@mockery --output usecase/person/mocks --dir usecase/person --all
+	@mockery --output usecase/weather/mocks --dir usecase/weather --all
 
 clean:
 	@rm -rf usecase/person/mocks/*
+	@rm -rf usecase/weather/mocks/*
