@@ -2,15 +2,15 @@ version: "3"
 services:
   mysql:
     image: mariadb:latest
-    command: --init-file /data/application/init.sql
+    command: --default-authentication-plugin=mysql_native_password --init-file /data/application/init.sql
     volumes:
       - ./ops/db/init.sql:/data/application/init.sql
     environment:
-      MARIADB_USER: workshop
-      MARIADB_PASSWORD: workshop
-      MARIADB_ROOT_PASSWORD: db-root-password
-      MARIADB_DATABASE: workshop
+      MYSQL_ROOT_PASSWORD: clean_architecture_go_v2
+      MYSQL_DATABASE: clean_architecture_go_v2
+      MYSQL_USER: clean_architecture_go_v2
+      MYSQL_PASSWORD: clean_architecture_go_v2
     ports:
       - "3306:3306"
-    container_name: workshop-mysql
+    container_name: clean-architecture-go-v2-mysql
     network_mode: "bridge"

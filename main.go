@@ -19,7 +19,7 @@ const ( //@todo pegar essa informação de variáveis de ambiente
 )
 
 func main() {
-	dbUri := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", "root", dbRootPassword, "localhost", "3306", database)
+	dbUri := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", dbUser, dbPassword, "localhost", "3306", database)
 	db, err := sql.Open("mysql", dbUri)
 	if err != nil {
 		log.Fatal(err)
