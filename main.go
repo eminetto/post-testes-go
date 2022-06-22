@@ -10,6 +10,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
 	"log"
+	"os"
 )
 
 const ( //@todo pegar essa informação de variáveis de ambiente
@@ -28,7 +29,7 @@ func main() {
 	repo := infra.NewMySQL(db)
 	pService := person.NewService(repo)
 
-	wService := weather.NewService("71a80f2a4b098e54c044cb04a8fac7bb") //@todo pegar de config
+	wService := weather.NewService(os.Getenv("API_KEY"))
 
 	e := echo.New()
 	e.GET("/hello", api.Hello)
