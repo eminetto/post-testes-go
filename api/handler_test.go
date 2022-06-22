@@ -30,28 +30,47 @@ func TestHello(t *testing.T) {
 
 func TestGetUser(t *testing.T) {
 	e := echo.New()
-	req, _ := http.NewRequest("GET", "/", nil)
-	rec := httptest.NewRecorder()
-	p := []*entity.Person{
-		{
-			ID:       1,
-			Name:     "Ronnie",
-			LastName: "Dio",
-		},
-	}
-	s := person.NewUseCase(t)
-	s.On("Search", "dio").
-		Return(p, nil).
-		Once()
-	c := e.NewContext(req, rec)
-	c.SetPath("/hello/:lastname")
-	c.SetParamNames("lastname")
-	c.SetParamValues("dio")
-	h := api.GetUser(s)
-	err := h(c)
-	assert.Nil(t, err)
-	assert.Equal(t, http.StatusOK, rec.Code)
-	assert.Equal(t, "Hello Ronnie Dio", rec.Body.String())
+	t.Run("status ok", func(t *testing.T) {
+		req, _ := http.NewRequest("GET", "/", nil)
+		rec := httptest.NewRecorder()
+		p := []*entity.Person{
+			{
+				ID:       1,
+				Name:     "Ronnie",
+				LastName: "Dio",
+			},
+		}
+		s := person.NewUseCase(t)
+		s.On("Search", "dio").
+			Return(p, nil).
+			Once()
+		c := e.NewContext(req, rec)
+		c.SetPath("/hello/:lastname")
+		c.SetParamNames("lastname")
+		c.SetParamValues("dio")
+		h := api.GetUser(s)
+		err := h(c)
+		assert.Nil(t, err)
+		assert.Equal(t, http.StatusOK, rec.Code)
+		assert.Equal(t, "Hello Ronnie Dio", rec.Body.String())
+	})
+	t.Run("status not found", func(t *testing.T) {
+		req, _ := http.NewRequest("GET", "/", nil)
+		rec := httptest.NewRecorder()
+		s := person.NewUseCase(t)
+		s.On("Search", "dio").
+			Return([]*entity.Person{}, nil).
+			Once()
+		c := e.NewContext(req, rec)
+		c.SetPath("/hello/:lastname")
+		c.SetParamNames("lastname")
+		c.SetParamValues("dio")
+		h := api.GetUser(s)
+		err := h(c)
+		assert.Nil(t, err)
+		assert.Equal(t, http.StatusNotFound, rec.Code)
+	})
+
 }
 
 func TestWeather(t *testing.T) {
