@@ -305,4 +305,7 @@ Assim como na escrita de código em geral, criar um código de teste bom e limpo
 
 ## Referências
 
-[The Practical Test Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html)
+- [The Practical Test Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html)
+- [Testes de unidade e TDD](https://www.slideshare.net/lcobucci/testes-de-unidade-e-tdd-solisc-2011)
+- [Mocks Aren't Stubs](https://martinfowler.com/articles/mocksArentStubs.html)
+- [“Don’t Mock What You Don’t Own” in 5 Minutes](https://hynek.me/articles/what-to-mock-in-5-mins/)
