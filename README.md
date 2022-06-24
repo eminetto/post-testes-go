@@ -300,7 +300,7 @@ Assim como na escrita de código em geral, criar um código de teste bom e limpo
 
 - O código de teste é tão importante quanto o código de produção. Dê-lhe o mesmo nível de cuidado e atenção. *"este é apenas um código de teste"* não é uma desculpa válida para justificar um código desleixado
 - Teste uma condição por teste. Isso ajuda você a manter seus testes curtos e fáceis de raciocinar. Em Go podemos usar a construção `t.Run`, como [neste exemplo](https://github.com/PicPay/go-test-workshop/blob/main/infraestructure/repository/person/mysql_test.go#L36).
-- Usar uma [estrutura bem definida](colocar link pra ancora do estrutura de testes) facilita a construção de testes limpos.
+- Usar uma [estrutura bem definida](https://github.com/PicPay/go-test-workshop#estrutura-dos-testes) facilita a construção de testes limpos.
 - A legibilidade importa. Não tente ser excessivamente DRY. A duplicação é aceitável, se melhorar a legibilidade. Tente encontrar um equilíbrio entre o código [DRY e DAMP](https://stackoverflow.com/questions/6453235/what-does-damp-not-dry-mean-when-talking-about-unit-tests?answertab=trending#tab-top)
 
 ## Referências
