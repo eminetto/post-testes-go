@@ -59,6 +59,8 @@ Neste repositório podemos ver implementações da Pirâmide de Testes
 
 ```
 
+### Estrutura dos testes
+
 Antes de mergulhar nos tipos de teste,  uma boa estrutura para todos os testes é esta:
 
 1. Configure os dados de teste
@@ -70,6 +72,89 @@ Vamos observar esta estrutura em todos os testes.
 ### Testes unitários
 
 Testes de unidade garantem que uma determinada unidade (o *sujeito em teste*) da base de código funcione conforme o esperado. Os testes de unidade têm o escopo mais restrito de todos os testes do conjunto de testes. O número de testes de unidade do conjunto de testes superará em grande parte qualquer outro tipo de teste.
+
+
+#### O que testar?
+
+Os testes unitários devem pelo menos testar a interface pública do pacote.  Em Go é possível testar tanto as funções públicas (as que começam com a primeira letra maiúscula) quanto as funções privadas do pacote, mas é recomendado testarmos prioritariamente as públicas.  
+
+Há uma linha tênue quando se trata de escrever testes de unidade: eles devem garantir que todos os seus caminhos de código não triviais sejam testados (incluindo caminho feliz e casos de borda). Ao mesmo tempo, eles não devem estar muito vinculados à sua implementação.
+
+Por que isso?
+
+Testes muito próximos do código de produção rapidamente se tornam irritantes. Assim que você refatorar seu código de produção (recapitulação rápida: refatorar significa alterar a estrutura interna do seu código sem alterar o comportamento visível externamente), seus testes de unidade irão quebrar.
+Resumindo, não reflita sua estrutura de código interna em seus testes de unidade. Teste para comportamento observável em vez disso. Para ilustrar esse conceito, no código a seguir:
+
+
+Arquivo `service.go`
+```go
+
+package service
+
+//NewService create new service
+func NewService() *Service {
+    return &Service{}
+}
+
+//FindAll
+func (s *Service) FindAll() ([]*entity.Privilege, error) {
+    acl := s.getDefaultPrivileges()
+    return acl, nil
+}
+
+//FindByRole
+func (s *Service) FindyByRole(r *entity.Role) ([]*entity.Privilege, error) {
+    var ret []*entity.Privilege
+    acl := s.getDefaultPrivileges()
+    for _, p := range acl {
+        if p.Role.Slug == r.Slug {
+            ret = append(ret, p)
+        }
+        pChildren := walkPrivilegeChildren(p)
+        for _, pC := range pChildren {
+            if pC.Role.Slug == r.Slug {
+                ret = append(ret, pC)
+            }
+        }
+    }
+    return ret, nil
+}
+
+func walkPrivilegeChildren(priv *entity.Privilege) []*entity.Privilege {
+    var p []*entity.Privilege
+    for _, c := range priv.Children {
+        p = append(p, walkPrivilegeChildren(c)...)
+    }
+    return p
+}
+
+
+
+```
+
+O recomendado é criarmos testes para a interface pública do pacote, as funções `NewService`, `FindAll` e `FindyByRole`. Desta forma,
+se for necessário uma refatoração nas funções internas, como a `getDefaultPrivileges` e `walkPrivilegeChildren` não é necessário refatorar também os testes unitários. 
+Para fazer isso em Go basta criar um pacote especial no momento da escrita do teste:
+
+Arquivo `service_test.go`
+
+```go
+package service_test
+
+import (
+	"testing"
+	"github.com/PicPay/example"
+)
+
+func TestFindAll(t *testing.T) {
+	s := example.NewService()
+	all, err := s.FindAll()
+	//asserts vão aqui
+}
+```
+
+Desta forma, nosso teste se comporta como um pacote diferente, apesar do arquivo estar no mesmo diretório que o `service.go`. Essa é uma facilidade da linguagem para facilitar a criação de testes.
+
 
 #### Exemplos de teste unitário
 
@@ -183,7 +268,40 @@ Execute
 
     make e2e
 
+## Testes na correção de bugs
 
+Testes, especialmente os unitários, são ótimas ferramentas para usarmos no momento da correção de um bug. Idealmente, quando um erro é reportado um bom fluxo para se seguir é:
+
+1. Escreva um cenário de testes que produza o erro
+2. Resolva o problema no código fonte
+3. Execute os testes para garantir que nenhum efeito colateral foi adicionado
+4. Refatore o código fonte caso necessário
+5. Execute os testes novamente e faça o deploy da nova versão.
+
+
+## Evite a duplicação de testes
+
+Agora que você sabe que deve escrever diferentes tipos de testes, há mais uma armadilha a ser evitada: duplicar testes em todas as diferentes camadas da pirâmide. 
+Embora seu pressentimento possa dizer que não existem "muitos testes", isso não é uma verdade. Cada teste em seu conjunto de testes é bagagem adicional e não vem de graça. Escrever e manter testes leva tempo. Ler e entender o teste de outras pessoas leva tempo. E, claro, executar testes leva tempo.
+
+Assim como no código de produção, você deve buscar a simplicidade e evitar a duplicação. No contexto da implementação de sua pirâmide de teste, você deve manter duas regras em mente:
+
+1. Se um teste de nível superior detectar um erro e não houver falha no teste de nível inferior, você precisará escrever um teste de nível inferior
+2. Empurre seus testes o mais baixo possível na pirâmide de testes
+
+A primeira regra é importante porque os testes de nível inferior permitem restringir melhor os erros e replicá-los de maneira isolada. Eles serão executados mais rapidamente e ficarão menos inchados quando você estiver depurando o problema em questão. 
+
+A segunda regra é importante para manter seu conjunto de testes rápido. Se você testou todas as condições com confiança em um teste de nível inferior, não há necessidade de manter um teste de nível superior em seu conjunto de testes. Ter testes redundantes se tornará irritante em seu trabalho diário pois o conjunto de testes será mais lento e você precisará alterar mais lugares quando alterar o comportamento do seu código.
+
+
+## Escrevendo código de teste limpo
+
+Assim como na escrita de código em geral, criar um código de teste bom e limpo exige muito cuidado. Aqui estão mais algumas dicas para criar um código de teste sustentável:
+
+- O código de teste é tão importante quanto o código de produção. Dê-lhe o mesmo nível de cuidado e atenção. *"este é apenas um código de teste"* não é uma desculpa válida para justificar um código desleixado
+- Teste uma condição por teste. Isso ajuda você a manter seus testes curtos e fáceis de raciocinar. Em Go podemos usar a construção `t.Run`, como [neste exemplo](https://github.com/PicPay/go-test-workshop/blob/main/infraestructure/repository/person/mysql_test.go#L36).
+- Usar uma [estrutura bem definida](colocar link pra ancora do estrutura de testes) facilita a construção de testes limpos.
+- A legibilidade importa. Não tente ser excessivamente DRY. A duplicação é aceitável, se melhorar a legibilidade. Tente encontrar um equilíbrio entre o código [DRY e DAMP](https://stackoverflow.com/questions/6453235/what-does-damp-not-dry-mean-when-talking-about-unit-tests?answertab=trending#tab-top)
 
 ## Referências
 
