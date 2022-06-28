@@ -15,7 +15,7 @@ import (
 
 func TestService_Get(t *testing.T) {
 	t.Run("usuário encontrado", func(t *testing.T) {
-		//fase: Configure os dados de teste
+		//fase: Arrange
 		p := &entity.Person{
 			ID:       1,
 			Name:     "Ozzy",
@@ -26,10 +26,10 @@ func TestService_Get(t *testing.T) {
 			Return(p, nil).
 			Once()
 		service := person.NewService(repo)
-		//fase: Invoque o método sendo testado
+		//fase: Act
 		found, err := service.Get(entity.ID(1))
 
-		//fase: Confirme que os resultados esperados são retornados
+		//fase: Assert
 		assert.Nil(t, err)
 		assert.Equal(t, p, found)
 
