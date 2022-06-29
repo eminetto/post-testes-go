@@ -23,7 +23,7 @@ Baseado [neste post](https://martinfowler.com/articles/practical-test-pyramid.ht
 
 ```
 
-A aplicação fornece três endponts:
+A aplicação fornece três endpoints:
 
 ```
 
