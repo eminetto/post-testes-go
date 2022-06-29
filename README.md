@@ -250,6 +250,14 @@ Execute
     make integration
 
 
+#### Suite test
+
+Para reutilizar código e organizar a inicialização dos testes, pode ser utilizado o [Suite](https://github.com/stretchr/testify#suite-package) da própria Testify. Com o suite, podemos utilizar os métodos SetupTest e TearDownTest, garantindo um teste limpo e assertivo.
+
+#### Exemplo de teste de integração usando o Suite
+
+Neste [PR](https://github.com/PicPay/go-test-workshop/pull/2) é possível ver o uso do Suite em uma versão do exemplo anterior.
+
 ### Teste end to end
 
 Testes de ponta a ponta dão a você a maior confiança quando você precisa decidir se seu software está funcionando ou não. Mas devido ao alto custo de manutenção, você deve reduzir ao mínimo o número de testes completos.
