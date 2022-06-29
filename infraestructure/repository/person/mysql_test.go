@@ -10,30 +10,55 @@ import (
 	"github.com/PicPay/go-test-workshop/infraestructure/repository/person"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/suite"
 	"testing"
 )
 
-func TestCRUD(t *testing.T) {
-	ctx := context.Background()
-	container, err := person.SetupMysqL(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer container.Terminate(ctx)
-	db, err := sql.Open("mysql", container.URI)
-	if err != nil {
-		t.Error(err)
-	}
-	defer db.Close()
-	err = person.InitMySQL(ctx, db)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer person.TruncateMySQL(ctx, db)
+type PersonTestSuite struct {
+	suite.Suite
+	ctx       context.Context
+	container *person.MysqlDBContainer
+	db        *sql.DB
+}
 
-	repo := person.NewMySQL(db)
+// In order for 'go test' to run this suite, we need to create
+// a normal test function and pass our suite to suite.Run
+func TestPersonTestSuite(t *testing.T) {
+	suite.Run(t, new(PersonTestSuite))
+}
 
-	t.Run("inserir person", func(t *testing.T) {
+// before each test
+func (suite *PersonTestSuite) SetupTest() {
+	var err error
+	suite.ctx = context.Background()
+	suite.container, err = person.SetupMysqL(suite.ctx)
+	if err != nil {
+		suite.T().Fatal(err)
+	}
+	suite.db, err = sql.Open("mysql", suite.container.URI)
+	if err != nil {
+		suite.T().Error(err)
+	}
+	err = person.InitMySQL(suite.ctx, suite.db)
+	if err != nil {
+		suite.T().Fatal(err)
+	}
+}
+
+//This method is ran after all tests have runned, it cleans the suite
+func (suite *PersonTestSuite) TearDownTest() {
+	person.TruncateMySQL(suite.ctx, suite.db)
+	err := suite.db.Close()
+	if err != nil {
+		suite.T().Fatal(err)
+	}
+	suite.container.Terminate(suite.ctx)
+}
+
+func (suite *PersonTestSuite) TestCRUD() {
+	repo := person.NewMySQL(suite.db)
+
+	suite.T().Run("inserir person", func(t *testing.T) {
 		p := &entity.Person{
 			Name:     "Ozzy",
 			LastName: "Osbourne",
@@ -42,61 +67,44 @@ func TestCRUD(t *testing.T) {
 		assert.Equal(t, entity.ID(1), id)
 		assert.Nil(t, err)
 	})
-	t.Run("recuperar person", func(t *testing.T) {
+	suite.T().Run("recuperar person", func(t *testing.T) {
 		result, err := repo.Get(entity.ID(1))
-		assert.Equal(t, "Ozzy", result.Name)
-		assert.Nil(t, err)
+		assert.Equal(suite.T(), "Ozzy", result.Name)
+		assert.Nil(suite.T(), err)
 	})
-	t.Run("atualizar person", func(t *testing.T) {
+	suite.T().Run("atualizar person", func(t *testing.T) {
 		result, err := repo.Get(entity.ID(1))
-		assert.Nil(t, err)
+		assert.Nil(suite.T(), err)
 		result.Name = "Novo nome"
 		err = repo.Update(result)
-		assert.Nil(t, err)
+		assert.Nil(suite.T(), err)
 		saved, err := repo.Get(entity.ID(1))
-		assert.Nil(t, err)
-		assert.Equal(t, "Novo nome", saved.Name)
+		assert.Nil(suite.T(), err)
+		assert.Equal(suite.T(), "Novo nome", saved.Name)
 	})
-	t.Run("listar person", func(t *testing.T) {
+	suite.T().Run("listar person", func(t *testing.T) {
 		result, err := repo.List()
-		assert.Equal(t, 1, len(result))
-		assert.Equal(t, "Osbourne", result[0].LastName)
-		assert.Nil(t, err)
+		assert.Equal(suite.T(), 1, len(result))
+		assert.Equal(suite.T(), "Osbourne", result[0].LastName)
+		assert.Nil(suite.T(), err)
 	})
-	t.Run("remover person", func(t *testing.T) {
+	suite.T().Run("remover person", func(t *testing.T) {
 		err := repo.Delete(entity.ID(1))
-		assert.Nil(t, err)
+		assert.Nil(suite.T(), err)
 	})
-	t.Run("listar person vazia", func(t *testing.T) {
+	suite.T().Run("listar person vazia", func(t *testing.T) {
 		result, err := repo.List()
-		assert.Nil(t, result)
-		assert.Errorf(t, err, "not found")
+		assert.Nil(suite.T(), result)
+		assert.Errorf(suite.T(), err, "not found")
 	})
-	t.Run("remover person não existente", func(t *testing.T) {
+	suite.T().Run("remover person não existente", func(t *testing.T) {
 		err := repo.Delete(entity.ID(1))
-		assert.Errorf(t, err, "not found")
+		assert.Errorf(suite.T(), err, "not found")
 	})
 }
 
-func TestSearch(t *testing.T) {
-	ctx := context.Background()
-	container, err := person.SetupMysqL(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer container.Terminate(ctx)
-	db, err := sql.Open("mysql", container.URI)
-	if err != nil {
-		t.Error(err)
-	}
-	defer db.Close()
-	err = person.InitMySQL(ctx, db)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer person.TruncateMySQL(ctx, db)
-
-	repo := person.NewMySQL(db)
+func (suite *PersonTestSuite) TestSearch() {
+	repo := person.NewMySQL(suite.db)
 
 	p1 := &entity.Person{
 		Name:     "Ozzy",
@@ -106,10 +114,11 @@ func TestSearch(t *testing.T) {
 		Name:     "Ronnie",
 		LastName: "Dio",
 	}
+	var err error
 	p1.ID, err = repo.Create(p1)
-	assert.Nil(t, err)
+	assert.Nil(suite.T(), err)
 	p2.ID, err = repo.Create(p2)
-	assert.Nil(t, err)
+	assert.Nil(suite.T(), err)
 
 	tests := []struct {
 		query       string
@@ -169,8 +178,8 @@ func TestSearch(t *testing.T) {
 	}
 	for _, test := range tests {
 		found, err := repo.Search(test.query)
-		assert.Equal(t, test.expectedErr, err)
-		assert.Equal(t, test.result, found)
+		assert.Equal(suite.T(), test.expectedErr, err)
+		assert.Equal(suite.T(), test.result, found)
 	}
 
 }
