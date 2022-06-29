@@ -63,11 +63,11 @@ Neste repositório podemos ver implementações da Pirâmide de Testes
 
 Antes de mergulhar nos tipos de teste,  uma boa estrutura para todos os testes é esta:
 
-1. Configure os dados de teste
-2. Invoque o método/função sendo testada
-3. Confirme que os resultados esperados são retornados
+1. Configure os dados de teste, prepare o teste
+2. Invoque o método/função sendo testada, execute o teste
+3. Confirme que os resultados esperados são retornados, verifique as asserções
 
-Vamos observar esta estrutura em todos os testes.
+Este padrão também é conhecido como *Arrange* (Prepare o teste), *Act* (Execute o teste) e *Assert* (Verifique as asserções). Vamos observar esta estrutura em todos os testes.
 
 ### Testes unitários
 
