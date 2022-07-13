@@ -14,9 +14,9 @@ e2e:
 	go test -v ./... -tags=e2e -coverprofile=cp.out
 
 generate-mocks:
-	@mockery --output usecase/person/mocks --dir usecase/person --all
-	@mockery --output usecase/weather/mocks --dir usecase/weather --all
+	@mockery --output person/mocks --dir person --all
+	@mockery --output weather/mocks --dir weather --all
 
 clean:
-	@rm -rf usecase/person/mocks/*
-	@rm -rf usecase/weather/mocks/*
+	@rm -rf person/mocks/*
+	@rm -rf weather/mocks/*

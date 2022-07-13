@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	entity "github.com/PicPay/go-test-workshop/entity"
+	person "github.com/PicPay/go-test-workshop/person"
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -13,18 +13,18 @@ type Repository struct {
 }
 
 // Create provides a mock function with given fields: e
-func (_m *Repository) Create(e *entity.Person) (entity.ID, error) {
+func (_m *Repository) Create(e *person.Person) (person.ID, error) {
 	ret := _m.Called(e)
 
-	var r0 entity.ID
-	if rf, ok := ret.Get(0).(func(*entity.Person) entity.ID); ok {
+	var r0 person.ID
+	if rf, ok := ret.Get(0).(func(*person.Person) person.ID); ok {
 		r0 = rf(e)
 	} else {
-		r0 = ret.Get(0).(entity.ID)
+		r0 = ret.Get(0).(person.ID)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(*entity.Person) error); ok {
+	if rf, ok := ret.Get(1).(func(*person.Person) error); ok {
 		r1 = rf(e)
 	} else {
 		r1 = ret.Error(1)
@@ -34,11 +34,11 @@ func (_m *Repository) Create(e *entity.Person) (entity.ID, error) {
 }
 
 // Delete provides a mock function with given fields: id
-func (_m *Repository) Delete(id entity.ID) error {
+func (_m *Repository) Delete(id person.ID) error {
 	ret := _m.Called(id)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(entity.ID) error); ok {
+	if rf, ok := ret.Get(0).(func(person.ID) error); ok {
 		r0 = rf(id)
 	} else {
 		r0 = ret.Error(0)
@@ -48,20 +48,20 @@ func (_m *Repository) Delete(id entity.ID) error {
 }
 
 // Get provides a mock function with given fields: id
-func (_m *Repository) Get(id entity.ID) (*entity.Person, error) {
+func (_m *Repository) Get(id person.ID) (*person.Person, error) {
 	ret := _m.Called(id)
 
-	var r0 *entity.Person
-	if rf, ok := ret.Get(0).(func(entity.ID) *entity.Person); ok {
+	var r0 *person.Person
+	if rf, ok := ret.Get(0).(func(person.ID) *person.Person); ok {
 		r0 = rf(id)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*entity.Person)
+			r0 = ret.Get(0).(*person.Person)
 		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(entity.ID) error); ok {
+	if rf, ok := ret.Get(1).(func(person.ID) error); ok {
 		r1 = rf(id)
 	} else {
 		r1 = ret.Error(1)
@@ -71,15 +71,15 @@ func (_m *Repository) Get(id entity.ID) (*entity.Person, error) {
 }
 
 // List provides a mock function with given fields:
-func (_m *Repository) List() ([]*entity.Person, error) {
+func (_m *Repository) List() ([]*person.Person, error) {
 	ret := _m.Called()
 
-	var r0 []*entity.Person
-	if rf, ok := ret.Get(0).(func() []*entity.Person); ok {
+	var r0 []*person.Person
+	if rf, ok := ret.Get(0).(func() []*person.Person); ok {
 		r0 = rf()
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]*entity.Person)
+			r0 = ret.Get(0).([]*person.Person)
 		}
 	}
 
@@ -94,15 +94,15 @@ func (_m *Repository) List() ([]*entity.Person, error) {
 }
 
 // Search provides a mock function with given fields: query
-func (_m *Repository) Search(query string) ([]*entity.Person, error) {
+func (_m *Repository) Search(query string) ([]*person.Person, error) {
 	ret := _m.Called(query)
 
-	var r0 []*entity.Person
-	if rf, ok := ret.Get(0).(func(string) []*entity.Person); ok {
+	var r0 []*person.Person
+	if rf, ok := ret.Get(0).(func(string) []*person.Person); ok {
 		r0 = rf(query)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]*entity.Person)
+			r0 = ret.Get(0).([]*person.Person)
 		}
 	}
 
@@ -117,11 +117,11 @@ func (_m *Repository) Search(query string) ([]*entity.Person, error) {
 }
 
 // Update provides a mock function with given fields: e
-func (_m *Repository) Update(e *entity.Person) error {
+func (_m *Repository) Update(e *person.Person) error {
 	ret := _m.Called(e)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(*entity.Person) error); ok {
+	if rf, ok := ret.Get(0).(func(*person.Person) error); ok {
 		r0 = rf(e)
 	} else {
 		r0 = ret.Error(0)

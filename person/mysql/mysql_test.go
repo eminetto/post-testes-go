@@ -1,13 +1,13 @@
 //go:build integration
 
-package person_test
+package mysql_test
 
 import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/PicPay/go-test-workshop/entity"
-	"github.com/PicPay/go-test-workshop/infraestructure/repository/person"
+	"github.com/PicPay/go-test-workshop/person"
+	"github.com/PicPay/go-test-workshop/person/mysql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -31,29 +31,29 @@ func TestCRUD(t *testing.T) {
 	}
 	defer person.TruncateMySQL(ctx, db)
 
-	repo := person.NewMySQL(db)
+	repo := mysql.NewMySQL(db)
 
 	t.Run("inserir person", func(t *testing.T) {
-		p := &entity.Person{
+		p := &person.Person{
 			Name:     "Ozzy",
 			LastName: "Osbourne",
 		}
 		id, err := repo.Create(p)
-		assert.Equal(t, entity.ID(1), id)
+		assert.Equal(t, person.ID(1), id)
 		assert.Nil(t, err)
 	})
 	t.Run("recuperar person", func(t *testing.T) {
-		result, err := repo.Get(entity.ID(1))
+		result, err := repo.Get(person.ID(1))
 		assert.Equal(t, "Ozzy", result.Name)
 		assert.Nil(t, err)
 	})
 	t.Run("atualizar person", func(t *testing.T) {
-		result, err := repo.Get(entity.ID(1))
+		result, err := repo.Get(person.ID(1))
 		assert.Nil(t, err)
 		result.Name = "Novo nome"
 		err = repo.Update(result)
 		assert.Nil(t, err)
-		saved, err := repo.Get(entity.ID(1))
+		saved, err := repo.Get(person.ID(1))
 		assert.Nil(t, err)
 		assert.Equal(t, "Novo nome", saved.Name)
 	})
@@ -64,7 +64,7 @@ func TestCRUD(t *testing.T) {
 		assert.Nil(t, err)
 	})
 	t.Run("remover person", func(t *testing.T) {
-		err := repo.Delete(entity.ID(1))
+		err := repo.Delete(person.ID(1))
 		assert.Nil(t, err)
 	})
 	t.Run("listar person vazia", func(t *testing.T) {
@@ -73,7 +73,7 @@ func TestCRUD(t *testing.T) {
 		assert.Errorf(t, err, "not found")
 	})
 	t.Run("remover person não existente", func(t *testing.T) {
-		err := repo.Delete(entity.ID(1))
+		err := repo.Delete(person.ID(1))
 		assert.Errorf(t, err, "not found")
 	})
 }
@@ -96,13 +96,13 @@ func TestSearch(t *testing.T) {
 	}
 	defer person.TruncateMySQL(ctx, db)
 
-	repo := person.NewMySQL(db)
+	repo := mysql.NewMySQL(db)
 
-	p1 := &entity.Person{
+	p1 := &person.Person{
 		Name:     "Ozzy",
 		LastName: "Osbourne",
 	}
-	p2 := &entity.Person{
+	p2 := &person.Person{
 		Name:     "Ronnie",
 		LastName: "Dio",
 	}
@@ -113,47 +113,47 @@ func TestSearch(t *testing.T) {
 
 	tests := []struct {
 		query       string
-		result      []*entity.Person
+		result      []*person.Person
 		expectedErr error
 	}{
 		{
 			query:       "ozzy",
-			result:      []*entity.Person{p1},
+			result:      []*person.Person{p1},
 			expectedErr: nil,
 		},
 		{
 			query:       "Ozzy",
-			result:      []*entity.Person{p1},
+			result:      []*person.Person{p1},
 			expectedErr: nil,
 		},
 		{
 			query:       "osbourne",
-			result:      []*entity.Person{p1},
+			result:      []*person.Person{p1},
 			expectedErr: nil,
 		},
 		{
 			query:       "Osbourne",
-			result:      []*entity.Person{p1},
+			result:      []*person.Person{p1},
 			expectedErr: nil,
 		},
 		{
 			query:       "Dio",
-			result:      []*entity.Person{p2},
+			result:      []*person.Person{p2},
 			expectedErr: nil,
 		},
 		{
 			query:       "dio",
-			result:      []*entity.Person{p2},
+			result:      []*person.Person{p2},
 			expectedErr: nil,
 		},
 		{
 			query:       "ronnie",
-			result:      []*entity.Person{p2},
+			result:      []*person.Person{p2},
 			expectedErr: nil,
 		},
 		{
 			query:       "Ronnie",
-			result:      []*entity.Person{p2},
+			result:      []*person.Person{p2},
 			expectedErr: nil,
 		},
 		{

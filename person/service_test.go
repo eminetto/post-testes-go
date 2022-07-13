@@ -6,9 +6,8 @@ package person_test
 
 import (
 	"fmt"
-	"github.com/PicPay/go-test-workshop/entity"
-	"github.com/PicPay/go-test-workshop/usecase/person"
-	"github.com/PicPay/go-test-workshop/usecase/person/mocks"
+	"github.com/PicPay/go-test-workshop/person"
+	"github.com/PicPay/go-test-workshop/person/mocks"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -16,18 +15,18 @@ import (
 func TestService_Get(t *testing.T) {
 	t.Run("usuário encontrado", func(t *testing.T) {
 		//fase: Arrange
-		p := &entity.Person{
+		p := &person.Person{
 			ID:       1,
 			Name:     "Ozzy",
 			LastName: "Osbourne",
 		}
 		repo := mocks.NewRepository(t)
-		repo.On("Get", entity.ID(1)).
+		repo.On("Get", person.ID(1)).
 			Return(p, nil).
 			Once()
 		service := person.NewService(repo)
 		//fase: Act
-		found, err := service.Get(entity.ID(1))
+		found, err := service.Get(person.ID(1))
 
 		//fase: Assert
 		assert.Nil(t, err)
@@ -36,11 +35,11 @@ func TestService_Get(t *testing.T) {
 	})
 	t.Run("usuário não encontrado", func(t *testing.T) {
 		repo := mocks.NewRepository(t)
-		repo.On("Get", entity.ID(1)).
+		repo.On("Get", person.ID(1)).
 			Return(nil, fmt.Errorf("not found")).
 			Once()
 		service := person.NewService(repo)
-		found, err := service.Get(entity.ID(1))
+		found, err := service.Get(person.ID(1))
 		assert.Nil(t, found)
 		assert.Errorf(t, err, "erro lendo person do repositório: %w")
 	})
@@ -48,12 +47,12 @@ func TestService_Get(t *testing.T) {
 
 func TestService_Search(t *testing.T) {
 	//aqui vamos usar uma técnica chamada Table based tests
-	p1 := &entity.Person{
+	p1 := &person.Person{
 		ID:       1,
 		Name:     "Ozzy",
 		LastName: "Osbourne",
 	}
-	p2 := &entity.Person{
+	p2 := &person.Person{
 		ID:       2,
 		Name:     "Ronnie",
 		LastName: "Dio",
@@ -61,55 +60,55 @@ func TestService_Search(t *testing.T) {
 
 	tests := []struct {
 		query       string
-		result      []*entity.Person
+		result      []*person.Person
 		expectedErr error
 		mockErr     error
 	}{
 		{
 			query:       "ozzy",
-			result:      []*entity.Person{p1},
+			result:      []*person.Person{p1},
 			expectedErr: nil,
 			mockErr:     nil,
 		},
 		{
 			query:       "Ozzy",
-			result:      []*entity.Person{p1},
+			result:      []*person.Person{p1},
 			expectedErr: nil,
 			mockErr:     nil,
 		},
 		{
 			query:       "osbourne",
-			result:      []*entity.Person{p1},
+			result:      []*person.Person{p1},
 			expectedErr: nil,
 			mockErr:     nil,
 		},
 		{
 			query:       "Osbourne",
-			result:      []*entity.Person{p1},
+			result:      []*person.Person{p1},
 			expectedErr: nil,
 			mockErr:     nil,
 		},
 		{
 			query:       "Dio",
-			result:      []*entity.Person{p2},
+			result:      []*person.Person{p2},
 			expectedErr: nil,
 			mockErr:     nil,
 		},
 		{
 			query:       "dio",
-			result:      []*entity.Person{p2},
+			result:      []*person.Person{p2},
 			expectedErr: nil,
 			mockErr:     nil,
 		},
 		{
 			query:       "ronnie",
-			result:      []*entity.Person{p2},
+			result:      []*person.Person{p2},
 			expectedErr: nil,
 			mockErr:     nil,
 		},
 		{
 			query:       "Ronnie",
-			result:      []*entity.Person{p2},
+			result:      []*person.Person{p2},
 			expectedErr: nil,
 			mockErr:     nil,
 		},

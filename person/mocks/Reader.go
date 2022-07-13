@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	entity "github.com/PicPay/go-test-workshop/entity"
+	person "github.com/PicPay/go-test-workshop/person"
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -13,20 +13,20 @@ type Reader struct {
 }
 
 // Get provides a mock function with given fields: id
-func (_m *Reader) Get(id entity.ID) (*entity.Person, error) {
+func (_m *Reader) Get(id person.ID) (*person.Person, error) {
 	ret := _m.Called(id)
 
-	var r0 *entity.Person
-	if rf, ok := ret.Get(0).(func(entity.ID) *entity.Person); ok {
+	var r0 *person.Person
+	if rf, ok := ret.Get(0).(func(person.ID) *person.Person); ok {
 		r0 = rf(id)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*entity.Person)
+			r0 = ret.Get(0).(*person.Person)
 		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(entity.ID) error); ok {
+	if rf, ok := ret.Get(1).(func(person.ID) error); ok {
 		r1 = rf(id)
 	} else {
 		r1 = ret.Error(1)
@@ -36,15 +36,15 @@ func (_m *Reader) Get(id entity.ID) (*entity.Person, error) {
 }
 
 // List provides a mock function with given fields:
-func (_m *Reader) List() ([]*entity.Person, error) {
+func (_m *Reader) List() ([]*person.Person, error) {
 	ret := _m.Called()
 
-	var r0 []*entity.Person
-	if rf, ok := ret.Get(0).(func() []*entity.Person); ok {
+	var r0 []*person.Person
+	if rf, ok := ret.Get(0).(func() []*person.Person); ok {
 		r0 = rf()
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]*entity.Person)
+			r0 = ret.Get(0).([]*person.Person)
 		}
 	}
 
@@ -59,15 +59,15 @@ func (_m *Reader) List() ([]*entity.Person, error) {
 }
 
 // Search provides a mock function with given fields: query
-func (_m *Reader) Search(query string) ([]*entity.Person, error) {
+func (_m *Reader) Search(query string) ([]*person.Person, error) {
 	ret := _m.Called(query)
 
-	var r0 []*entity.Person
-	if rf, ok := ret.Get(0).(func(string) []*entity.Person); ok {
+	var r0 []*person.Person
+	if rf, ok := ret.Get(0).(func(string) []*person.Person); ok {
 		r0 = rf(query)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]*entity.Person)
+			r0 = ret.Get(0).([]*person.Person)
 		}
 	}
 
