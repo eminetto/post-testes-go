@@ -2,10 +2,11 @@ package api
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/PicPay/go-test-workshop/usecase/person"
 	"github.com/PicPay/go-test-workshop/usecase/weather"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 func Hello(c echo.Context) error {

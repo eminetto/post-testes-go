@@ -3,9 +3,10 @@ package person
 import (
 	"database/sql"
 	"fmt"
-	"github.com/PicPay/go-test-workshop/entity"
 	"strings"
 	"time"
+
+	"github.com/PicPay/go-test-workshop/entity"
 )
 
 //MySQL mysql repo
