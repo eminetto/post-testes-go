@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	entity "github.com/PicPay/go-test-workshop/entity"
+	person "github.com/PicPay/go-test-workshop/person"
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -13,14 +13,14 @@ type UseCase struct {
 }
 
 // Create provides a mock function with given fields: firstName, lastName
-func (_m *UseCase) Create(firstName string, lastName string) (entity.ID, error) {
+func (_m *UseCase) Create(firstName string, lastName string) (person.ID, error) {
 	ret := _m.Called(firstName, lastName)
 
-	var r0 entity.ID
-	if rf, ok := ret.Get(0).(func(string, string) entity.ID); ok {
+	var r0 person.ID
+	if rf, ok := ret.Get(0).(func(string, string) person.ID); ok {
 		r0 = rf(firstName, lastName)
 	} else {
-		r0 = ret.Get(0).(entity.ID)
+		r0 = ret.Get(0).(person.ID)
 	}
 
 	var r1 error
@@ -34,11 +34,11 @@ func (_m *UseCase) Create(firstName string, lastName string) (entity.ID, error) 
 }
 
 // Delete provides a mock function with given fields: id
-func (_m *UseCase) Delete(id entity.ID) error {
+func (_m *UseCase) Delete(id person.ID) error {
 	ret := _m.Called(id)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(entity.ID) error); ok {
+	if rf, ok := ret.Get(0).(func(person.ID) error); ok {
 		r0 = rf(id)
 	} else {
 		r0 = ret.Error(0)
@@ -48,20 +48,20 @@ func (_m *UseCase) Delete(id entity.ID) error {
 }
 
 // Get provides a mock function with given fields: id
-func (_m *UseCase) Get(id entity.ID) (*entity.Person, error) {
+func (_m *UseCase) Get(id person.ID) (*person.Person, error) {
 	ret := _m.Called(id)
 
-	var r0 *entity.Person
-	if rf, ok := ret.Get(0).(func(entity.ID) *entity.Person); ok {
+	var r0 *person.Person
+	if rf, ok := ret.Get(0).(func(person.ID) *person.Person); ok {
 		r0 = rf(id)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*entity.Person)
+			r0 = ret.Get(0).(*person.Person)
 		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(entity.ID) error); ok {
+	if rf, ok := ret.Get(1).(func(person.ID) error); ok {
 		r1 = rf(id)
 	} else {
 		r1 = ret.Error(1)
@@ -71,15 +71,15 @@ func (_m *UseCase) Get(id entity.ID) (*entity.Person, error) {
 }
 
 // List provides a mock function with given fields:
-func (_m *UseCase) List() ([]*entity.Person, error) {
+func (_m *UseCase) List() ([]*person.Person, error) {
 	ret := _m.Called()
 
-	var r0 []*entity.Person
-	if rf, ok := ret.Get(0).(func() []*entity.Person); ok {
+	var r0 []*person.Person
+	if rf, ok := ret.Get(0).(func() []*person.Person); ok {
 		r0 = rf()
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]*entity.Person)
+			r0 = ret.Get(0).([]*person.Person)
 		}
 	}
 
@@ -94,15 +94,15 @@ func (_m *UseCase) List() ([]*entity.Person, error) {
 }
 
 // Search provides a mock function with given fields: query
-func (_m *UseCase) Search(query string) ([]*entity.Person, error) {
+func (_m *UseCase) Search(query string) ([]*person.Person, error) {
 	ret := _m.Called(query)
 
-	var r0 []*entity.Person
-	if rf, ok := ret.Get(0).(func(string) []*entity.Person); ok {
+	var r0 []*person.Person
+	if rf, ok := ret.Get(0).(func(string) []*person.Person); ok {
 		r0 = rf(query)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]*entity.Person)
+			r0 = ret.Get(0).([]*person.Person)
 		}
 	}
 
@@ -117,11 +117,11 @@ func (_m *UseCase) Search(query string) ([]*entity.Person, error) {
 }
 
 // Update provides a mock function with given fields: e
-func (_m *UseCase) Update(e *entity.Person) error {
+func (_m *UseCase) Update(e *person.Person) error {
 	ret := _m.Called(e)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(*entity.Person) error); ok {
+	if rf, ok := ret.Get(0).(func(*person.Person) error); ok {
 		r0 = rf(e)
 	} else {
 		r0 = ret.Error(0)

@@ -1,12 +1,22 @@
-package api
+package echo
 
 import (
 	"fmt"
-	"github.com/PicPay/go-test-workshop/usecase/person"
-	"github.com/PicPay/go-test-workshop/usecase/weather"
-	"github.com/labstack/echo/v4"
 	"net/http"
+
+	"github.com/PicPay/go-test-workshop/person"
+	"github.com/PicPay/go-test-workshop/weather"
+	logger "github.com/PicPay/lib-go-logger"
+	"github.com/labstack/echo/v4"
 )
+
+func Handlers(l *logger.Logger, pService person.UseCase, wService weather.UseCase) *echo.Echo {
+	e := echo.New()
+	e.GET("/hello", Hello)
+	e.GET("/hello/:lastname", GetUser(pService))
+	e.GET("/weather/:lat/:long", Weather(wService))
+	return e
+}
 
 func Hello(c echo.Context) error {
 	return c.String(http.StatusOK, "Hello, World!")

@@ -6,11 +6,11 @@ services:
     volumes:
       - ./ops/db/init.sql:/data/application/init.sql
     environment:
-      MYSQL_ROOT_PASSWORD: clean_architecture_go_v2
-      MYSQL_DATABASE: clean_architecture_go_v2
-      MYSQL_USER: clean_architecture_go_v2
-      MYSQL_PASSWORD: clean_architecture_go_v2
+      MYSQL_ROOT_PASSWORD: db-root-password
+      MYSQL_DATABASE: workshop
+      MYSQL_USER: workshop
+      MYSQL_PASSWORD: workshop
     ports:
       - "3306:3306"
-    container_name: clean-architecture-go-v2-mysql
+    container_name: go-test-workshop-mysql
     network_mode: "bridge"

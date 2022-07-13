@@ -1,13 +1,13 @@
 //go:build integration
 
-package person_test
+package mysql_test
 
 import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/PicPay/go-test-workshop/entity"
-	"github.com/PicPay/go-test-workshop/infraestructure/repository/person"
+	"github.com/PicPay/go-test-workshop/person"
+	"github.com/PicPay/go-test-workshop/person/mysql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -56,31 +56,31 @@ func (suite *PersonTestSuite) TearDownTest() {
 }
 
 func (suite *PersonTestSuite) TestCRUD() {
-	repo := person.NewMySQL(suite.db)
+	repo := mysql.NewMySQL(suite.db)
 
 	suite.T().Run("inserir person", func(t *testing.T) {
-		p := &entity.Person{
+		p := &person.Person{
 			Name:     "Ozzy",
 			LastName: "Osbourne",
 		}
 		id, err := repo.Create(p)
-		assert.Equal(t, entity.ID(1), id)
+		assert.Equal(t, person.ID(1), id)
 		assert.Nil(t, err)
 	})
 	suite.T().Run("recuperar person", func(t *testing.T) {
-		result, err := repo.Get(entity.ID(1))
-		assert.Equal(suite.T(), "Ozzy", result.Name)
-		assert.Nil(suite.T(), err)
+		result, err := repo.Get(person.ID(1))
+		assert.Equal(t, "Ozzy", result.Name)
+		assert.Nil(t, err)
 	})
 	suite.T().Run("atualizar person", func(t *testing.T) {
-		result, err := repo.Get(entity.ID(1))
-		assert.Nil(suite.T(), err)
+		result, err := repo.Get(person.ID(1))
+		assert.Nil(t, err)
 		result.Name = "Novo nome"
 		err = repo.Update(result)
-		assert.Nil(suite.T(), err)
-		saved, err := repo.Get(entity.ID(1))
-		assert.Nil(suite.T(), err)
-		assert.Equal(suite.T(), "Novo nome", saved.Name)
+		assert.Nil(t, err)
+		saved, err := repo.Get(person.ID(1))
+		assert.Nil(t, err)
+		assert.Equal(t, "Novo nome", saved.Name)
 	})
 	suite.T().Run("listar person", func(t *testing.T) {
 		result, err := repo.List()
@@ -89,8 +89,8 @@ func (suite *PersonTestSuite) TestCRUD() {
 		assert.Nil(suite.T(), err)
 	})
 	suite.T().Run("remover person", func(t *testing.T) {
-		err := repo.Delete(entity.ID(1))
-		assert.Nil(suite.T(), err)
+		err := repo.Delete(person.ID(1))
+		assert.Nil(t, err)
 	})
 	suite.T().Run("listar person vazia", func(t *testing.T) {
 		result, err := repo.List()
@@ -98,19 +98,18 @@ func (suite *PersonTestSuite) TestCRUD() {
 		assert.Errorf(suite.T(), err, "not found")
 	})
 	suite.T().Run("remover person não existente", func(t *testing.T) {
-		err := repo.Delete(entity.ID(1))
+		err := repo.Delete(person.ID(1))
 		assert.Errorf(suite.T(), err, "not found")
 	})
 }
-
 func (suite *PersonTestSuite) TestSearch() {
-	repo := person.NewMySQL(suite.db)
+	repo := mysql.NewMySQL(suite.db)
 
-	p1 := &entity.Person{
+	p1 := &person.Person{
 		Name:     "Ozzy",
 		LastName: "Osbourne",
 	}
-	p2 := &entity.Person{
+	p2 := &person.Person{
 		Name:     "Ronnie",
 		LastName: "Dio",
 	}
@@ -122,47 +121,47 @@ func (suite *PersonTestSuite) TestSearch() {
 
 	tests := []struct {
 		query       string
-		result      []*entity.Person
+		result      []*person.Person
 		expectedErr error
 	}{
 		{
 			query:       "ozzy",
-			result:      []*entity.Person{p1},
+			result:      []*person.Person{p1},
 			expectedErr: nil,
 		},
 		{
 			query:       "Ozzy",
-			result:      []*entity.Person{p1},
+			result:      []*person.Person{p1},
 			expectedErr: nil,
 		},
 		{
 			query:       "osbourne",
-			result:      []*entity.Person{p1},
+			result:      []*person.Person{p1},
 			expectedErr: nil,
 		},
 		{
 			query:       "Osbourne",
-			result:      []*entity.Person{p1},
+			result:      []*person.Person{p1},
 			expectedErr: nil,
 		},
 		{
 			query:       "Dio",
-			result:      []*entity.Person{p2},
+			result:      []*person.Person{p2},
 			expectedErr: nil,
 		},
 		{
 			query:       "dio",
-			result:      []*entity.Person{p2},
+			result:      []*person.Person{p2},
 			expectedErr: nil,
 		},
 		{
 			query:       "ronnie",
-			result:      []*entity.Person{p2},
+			result:      []*person.Person{p2},
 			expectedErr: nil,
 		},
 		{
 			query:       "Ronnie",
-			result:      []*entity.Person{p2},
+			result:      []*person.Person{p2},
 			expectedErr: nil,
 		},
 		{

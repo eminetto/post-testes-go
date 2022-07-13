@@ -2,7 +2,6 @@ package person
 
 import (
 	"fmt"
-	"github.com/PicPay/go-test-workshop/entity"
 )
 
 type Service struct {
@@ -16,7 +15,7 @@ func NewService(r Repository) *Service {
 	}
 }
 
-func (s *Service) Get(id entity.ID) (*entity.Person, error) {
+func (s *Service) Get(id ID) (*Person, error) {
 	p, err := s.r.Get(id)
 	if err != nil {
 		return nil, fmt.Errorf("erro lendo person do repositório: %w", err)
@@ -24,7 +23,7 @@ func (s *Service) Get(id entity.ID) (*entity.Person, error) {
 	return p, nil
 }
 
-func (s *Service) Search(query string) ([]*entity.Person, error) {
+func (s *Service) Search(query string) ([]*Person, error) {
 	p, err := s.r.Search(query)
 	if err != nil {
 		return nil, fmt.Errorf("erro buscando person do repositório: %w", err)
@@ -32,7 +31,7 @@ func (s *Service) Search(query string) ([]*entity.Person, error) {
 	return p, nil
 }
 
-func (s *Service) List() ([]*entity.Person, error) {
+func (s *Service) List() ([]*Person, error) {
 	p, err := s.r.List()
 	if err != nil {
 		return nil, fmt.Errorf("erro listando person do repositório: %w", err)
@@ -40,8 +39,8 @@ func (s *Service) List() ([]*entity.Person, error) {
 	return p, nil
 }
 
-func (s *Service) Create(firstName, lastName string) (entity.ID, error) {
-	p := entity.Person{
+func (s *Service) Create(firstName, lastName string) (ID, error) {
+	p := Person{
 		Name:     firstName,
 		LastName: lastName,
 	}
@@ -52,7 +51,7 @@ func (s *Service) Create(firstName, lastName string) (entity.ID, error) {
 	return id, nil
 }
 
-func (s *Service) Update(e *entity.Person) error {
+func (s *Service) Update(e *Person) error {
 	err := s.r.Update(e)
 	if err != nil {
 		return fmt.Errorf("erro atualizando person no repositório: %w", err)
@@ -60,7 +59,7 @@ func (s *Service) Update(e *entity.Person) error {
 	return nil
 }
 
-func (s *Service) Delete(id entity.ID) error {
+func (s *Service) Delete(id ID) error {
 	err := s.r.Delete(id)
 	if err != nil {
 		return fmt.Errorf("erro removendo person do repositório: %w", err)

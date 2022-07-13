@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	entity "github.com/PicPay/go-test-workshop/entity"
+	person "github.com/PicPay/go-test-workshop/person"
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -13,18 +13,18 @@ type Writer struct {
 }
 
 // Create provides a mock function with given fields: e
-func (_m *Writer) Create(e *entity.Person) (entity.ID, error) {
+func (_m *Writer) Create(e *person.Person) (person.ID, error) {
 	ret := _m.Called(e)
 
-	var r0 entity.ID
-	if rf, ok := ret.Get(0).(func(*entity.Person) entity.ID); ok {
+	var r0 person.ID
+	if rf, ok := ret.Get(0).(func(*person.Person) person.ID); ok {
 		r0 = rf(e)
 	} else {
-		r0 = ret.Get(0).(entity.ID)
+		r0 = ret.Get(0).(person.ID)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(*entity.Person) error); ok {
+	if rf, ok := ret.Get(1).(func(*person.Person) error); ok {
 		r1 = rf(e)
 	} else {
 		r1 = ret.Error(1)
@@ -34,11 +34,11 @@ func (_m *Writer) Create(e *entity.Person) (entity.ID, error) {
 }
 
 // Delete provides a mock function with given fields: id
-func (_m *Writer) Delete(id entity.ID) error {
+func (_m *Writer) Delete(id person.ID) error {
 	ret := _m.Called(id)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(entity.ID) error); ok {
+	if rf, ok := ret.Get(0).(func(person.ID) error); ok {
 		r0 = rf(id)
 	} else {
 		r0 = ret.Error(0)
@@ -48,11 +48,11 @@ func (_m *Writer) Delete(id entity.ID) error {
 }
 
 // Update provides a mock function with given fields: e
-func (_m *Writer) Update(e *entity.Person) error {
+func (_m *Writer) Update(e *person.Person) error {
 	ret := _m.Called(e)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(*entity.Person) error); ok {
+	if rf, ok := ret.Get(0).(func(*person.Person) error); ok {
 		r0 = rf(e)
 	} else {
 		r0 = ret.Error(0)
