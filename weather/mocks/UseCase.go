@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	entity "github.com/PicPay/go-test-workshop/entity"
+	weather "github.com/PicPay/go-test-workshop/weather"
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -13,15 +13,15 @@ type UseCase struct {
 }
 
 // Get provides a mock function with given fields: lat, long
-func (_m *UseCase) Get(lat string, long string) (*entity.Weather, error) {
+func (_m *UseCase) Get(lat string, long string) (*weather.Weather, error) {
 	ret := _m.Called(lat, long)
 
-	var r0 *entity.Weather
-	if rf, ok := ret.Get(0).(func(string, string) *entity.Weather); ok {
+	var r0 *weather.Weather
+	if rf, ok := ret.Get(0).(func(string, string) *weather.Weather); ok {
 		r0 = rf(lat, long)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*entity.Weather)
+			r0 = ret.Get(0).(*weather.Weather)
 		}
 	}
 

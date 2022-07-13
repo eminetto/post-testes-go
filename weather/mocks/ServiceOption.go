@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	weather "github.com/PicPay/go-test-workshop/usecase/weather"
+	weather "github.com/PicPay/go-test-workshop/weather"
 	mock "github.com/stretchr/testify/mock"
 )
 

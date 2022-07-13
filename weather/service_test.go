@@ -3,13 +3,13 @@ package weather_test
 import (
 	"bytes"
 	"fmt"
-	"github.com/PicPay/go-test-workshop/entity"
-	"github.com/PicPay/go-test-workshop/usecase/weather"
-	"github.com/PicPay/go-test-workshop/usecase/weather/mocks"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"testing"
+
+	"github.com/PicPay/go-test-workshop/weather"
+	"github.com/PicPay/go-test-workshop/weather/mocks"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGet(t *testing.T) {
@@ -29,12 +29,12 @@ func TestGet(t *testing.T) {
 	s := weather.NewService(apiKey,
 		weather.WithClient(client),
 	)
-	expected := &entity.Weather{
-		Coord: entity.Coord{
+	expected := &weather.Weather{
+		Coord: weather.Coord{
 			Lon: -48.5495,
 			Lat: -27.5969,
 		},
-		Main: entity.Main{
+		Main: weather.Main{
 			Temp:      19.69,
 			FeelsLike: 20.2,
 			TempMin:   15.99,
@@ -42,7 +42,7 @@ func TestGet(t *testing.T) {
 			Pressure:  1013,
 			Humidity:  95,
 		},
-		Wind: entity.Wind{
+		Wind: weather.Wind{
 			Speed: 2.57,
 			Deg:   90,
 		},

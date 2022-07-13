@@ -1,4 +1,4 @@
-package person
+package mysql
 
 import (
 	"database/sql"
@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/PicPay/go-test-workshop/entity"
+	"github.com/PicPay/go-test-workshop/person"
 )
 
 //MySQL mysql repo
@@ -22,7 +22,7 @@ func NewMySQL(db *sql.DB) *MySQL {
 }
 
 //Create a person
-func (r *MySQL) Create(p *entity.Person) (entity.ID, error) {
+func (r *MySQL) Create(p *person.Person) (person.ID, error) {
 	stmt, err := r.db.Prepare(`
 		insert into person (first_name, last_name, created_at) 
 		values(?,?,?)`)
@@ -42,16 +42,16 @@ func (r *MySQL) Create(p *entity.Person) (entity.ID, error) {
 	if err != nil {
 		return 0, err
 	}
-	return entity.ID(id), nil
+	return person.ID(id), nil
 }
 
 //Get a person
-func (r *MySQL) Get(id entity.ID) (*entity.Person, error) {
+func (r *MySQL) Get(id person.ID) (*person.Person, error) {
 	stmt, err := r.db.Prepare(`select id, first_name, last_name from person where id = ?`)
 	if err != nil {
 		return nil, err
 	}
-	var p entity.Person
+	var p person.Person
 	rows, err := stmt.Query(id)
 	if err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func (r *MySQL) Get(id entity.ID) (*entity.Person, error) {
 }
 
 //Update a person
-func (r *MySQL) Update(p *entity.Person) error {
+func (r *MySQL) Update(p *person.Person) error {
 	_, err := r.db.Exec("update person set first_name = ?, last_name = ?, updated_at = ? where id = ?", p.Name, p.LastName, time.Now().Format("2006-01-02"), p.ID)
 	if err != nil {
 		return err
@@ -76,20 +76,20 @@ func (r *MySQL) Update(p *entity.Person) error {
 }
 
 //Search person
-func (r *MySQL) Search(query string) ([]*entity.Person, error) {
+func (r *MySQL) Search(query string) ([]*person.Person, error) {
 	stmt, err := r.db.Prepare(`select id, first_name, last_name from person where first_name like ? or last_name like ?`)
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
-	var people []*entity.Person
+	var people []*person.Person
 	query = "%" + strings.ToLower(query) + "%"
 	rows, err := stmt.Query(query, query)
 	if err != nil {
 		return nil, err
 	}
 	for rows.Next() {
-		var p entity.Person
+		var p person.Person
 		err = rows.Scan(&p.ID, &p.Name, &p.LastName)
 		if err != nil {
 			return nil, err
@@ -104,19 +104,19 @@ func (r *MySQL) Search(query string) ([]*entity.Person, error) {
 }
 
 //List person
-func (r *MySQL) List() ([]*entity.Person, error) {
+func (r *MySQL) List() ([]*person.Person, error) {
 	stmt, err := r.db.Prepare(`select id, first_name, last_name from person`)
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
-	var people []*entity.Person
+	var people []*person.Person
 	rows, err := stmt.Query()
 	if err != nil {
 		return nil, err
 	}
 	for rows.Next() {
-		var p entity.Person
+		var p person.Person
 		err = rows.Scan(&p.ID, &p.Name, &p.LastName)
 		if err != nil {
 			return nil, err
@@ -131,7 +131,7 @@ func (r *MySQL) List() ([]*entity.Person, error) {
 }
 
 //Delete a person
-func (r *MySQL) Delete(id entity.ID) error {
+func (r *MySQL) Delete(id person.ID) error {
 	p, _ := r.Get(id)
 	if p == nil {
 		return fmt.Errorf("not found")

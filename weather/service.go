@@ -3,7 +3,6 @@ package weather
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/PicPay/go-test-workshop/entity"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -36,7 +35,7 @@ func WithClient(client HTTPClient) ServiceOption {
 	}
 }
 
-func (s *Service) Get(lat, long string) (*entity.Weather, error) {
+func (s *Service) Get(lat, long string) (*Weather, error) {
 	url := fmt.Sprintf("%s&lat=%s&lon=%s&appid=%s", s.url, lat, long, s.apiKey)
 	request, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -52,7 +51,7 @@ func (s *Service) Get(lat, long string) (*entity.Weather, error) {
 	if err != nil {
 		return nil, err
 	}
-	var w entity.Weather
+	var w Weather
 	err = json.Unmarshal(body, &w)
 	if err != nil {
 		return nil, err

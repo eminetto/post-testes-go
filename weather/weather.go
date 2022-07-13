@@ -1,4 +1,8 @@
-package entity
+package weather
+
+import (
+	"net/http"
+)
 
 type Weather struct {
 	Coord Coord  `json:"coord"`
@@ -24,4 +28,12 @@ type Main struct {
 type Wind struct {
 	Speed float64 `json:"speed"`
 	Deg   int64   `json:"deg"`
+}
+
+type HTTPClient interface {
+	Do(req *http.Request) (*http.Response, error)
+}
+
+type UseCase interface {
+	Get(lat, long string) (*Weather, error)
 }
