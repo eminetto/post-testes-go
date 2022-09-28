@@ -1,6 +1,6 @@
-# Workshop sobre testes
+# Testes automatizados em Go
 
-Repositório criado para exemplificar os tipos de testes e boas práticas que podem ser aplicados.
+Repositório criado para exemplificar os tipos de testes e boas práticas que podem ser aplicados. Este código foi usado como exemplo neste [post]()
 
 Baseado na [aplicação](https://github.com/hamvocke/spring-testing) usada como exemplo.
 
@@ -153,27 +153,27 @@ Desta forma, nosso teste se comporta como um pacote diferente, apesar do arquivo
 
 #### Exemplos de teste unitário
 
-[person/service_test.go](https://github.com/PicPay/go-test-workshop/blob/main/person/service_test.go)
+[person/service_test.go](https://github.com/eminetto/post-testes-go/blob/main/person/service_test.go)
 
-Este arquivo contém os testes do serviço que implementa a interface [UseCase](https://github.com/PicPay/go-test-workshop/blob/main/person/person.go#L43). 
+Este arquivo contém os testes do serviço que implementa a interface [UseCase](https://github.com/eminetto/post-testes-go/blob/main/person/person.go#L43). 
 
-Como o serviço tem por dependência uma implementação da interface [Repository](https://github.com/PicPay/go-test-workshop/blob/main/person/person.go#L27) (que por sua vez precisa de uma conexão com o banco de dados), vamos usar o conceito de [mocks](https://martinfowler.com/articles/mocksArentStubs.html) para mantermos o foco do teste apenas na regra de negócio do serviço.
+Como o serviço tem por dependência uma implementação da interface [Repository](https://github.com/eminetto/post-testes-go/blob/main/person/person.go#L27) (que por sua vez precisa de uma conexão com o banco de dados), vamos usar o conceito de [mocks](https://martinfowler.com/articles/mocksArentStubs.html) para mantermos o foco do teste apenas na regra de negócio do serviço.
 Para gerarmos facilmente os `mocks` estamos usando a ferramenta [mockery](https://github.com/vektra/mockery), que lê as interfaces e gera código para usarmos nos testes.
 A geração dos `mocks` é executada pelo comando `make generate-mocks` e pode ser executada manualmente ou automaticamente quando executamos o comando `make unit-test`
 
 
-[weather/service_test.go](https://github.com/PicPay/go-test-workshop/blob/main/weather/service_test.go)
+[weather/service_test.go](https://github.com/eminetto/post-testes-go/blob/main/weather/service_test.go)
 
-Este arquivo contém os testes do serviço que implementa a interface [UseCase](https://github.com/PicPay/go-test-workshop/blob/main/weather/weather.go#L37).
+Este arquivo contém os testes do serviço que implementa a interface [UseCase](https://github.com/eminetto/post-testes-go/blob/main/weather/weather.go#L37).
 
 Este é um serviço que faz uso de uma [API externa](https://api.openweathermap.org/). Para não acessar a API real a cada teste criamos um `mock` para simular o seu comportamento. 
-Vale destacar uma boa prática neste pacote. Ao invés de colocarmos como dependência do `UseCase` um `http.Client` padrão da linguagem foi criada uma [interface](https://github.com/PicPay/go-test-workshop/blob/main/weather/weather.go#L33) para ser usada como dependência. 
-No [construtor](https://github.com/PicPay/go-test-workshop/blob/main/weather/service.go#L19) do serviço criamos uma instância de `http.Client` e damos a opção do usuário substituir esse cliente padrão por outra implementação. 
-Fazemos uso desta opção no [momento do teste](https://github.com/PicPay/go-test-workshop/blob/main/weather/service_test.go#L30) ao passar um `mock` do client. 
+Vale destacar uma boa prática neste pacote. Ao invés de colocarmos como dependência do `UseCase` um `http.Client` padrão da linguagem foi criada uma [interface](https://github.com/eminetto/post-testes-go/blob/main/weather/weather.go#L33) para ser usada como dependência. 
+No [construtor](https://github.com/eminetto/post-testes-go/blob/main/weather/service.go#L19) do serviço criamos uma instância de `http.Client` e damos a opção do usuário substituir esse cliente padrão por outra implementação. 
+Fazemos uso desta opção no [momento do teste](https://github.com/eminetto/post-testes-go/blob/main/weather/service_test.go#L30) ao passar um `mock` do client. 
 Esta implementação pode ser resumida pela frase `“Don’t Mock What You Don’t Own”` e mais detalhes podem ser vistos neste [post](https://hynek.me/articles/what-to-mock-in-5-mins/).
 
 
-[internal/http/echo/handler_test.go](https://github.com/PicPay/go-test-workshop/blob/main/internal/http/echo/handler_test.go)
+[internal/http/echo/handler_test.go](https://github.com/eminetto/post-testes-go/blob/main/internal/http/echo/handler_test.go)
 
 Neste arquivo implementamos os testes unitários da camada de API. 
 
@@ -228,14 +228,14 @@ Se você estiver integrando com um serviço separado, execute uma instância des
 
 #### Exemplo de teste de integração
 
-[person/mysql/mysql_test.go](https://github.com/PicPay/go-test-workshop/blob/main/person/mysql/mysql_test.go)
+[person/mysql/mysql_test.go](https://github.com/eminetto/post-testes-go/blob/main/person/mysql/mysql_test.go)
 
 Este teste faz a validação da camada de integração com o banco de dados. 
-Ele [cria um container Docker](https://github.com/PicPay/go-test-workshop/blob/main/person/mysql/mysql_test.go#L18), 
-[conecta no banco de dados](https://github.com/PicPay/go-test-workshop/blob/main/person/mysql/mysql_test.go#L23), 
-[cria as tabelas](https://github.com/PicPay/go-test-workshop/blob/main/person/mysql/mysql_test.go#L28),
-[executa os testes](https://github.com/PicPay/go-test-workshop/blob/main/person/mysql/mysql_test.go#L36),
-e no final [faz o truncate das tabelas](https://github.com/PicPay/go-test-workshop/blob/main/person/mysql/mysql_test.go#L32) e [destrói o container](https://github.com/PicPay/go-test-workshop/blob/main/person/mysql/mysql_test.go#L22)
+Ele [cria um container Docker](https://github.com/eminetto/post-testes-go/blob/main/person/mysql/mysql_test.go#L18), 
+[conecta no banco de dados](https://github.com/eminetto/post-testes-go/blob/main/person/mysql/mysql_test.go#L23), 
+[cria as tabelas](https://github.com/eminetto/post-testes-go/blob/main/person/mysql/mysql_test.go#L28),
+[executa os testes](https://github.com/eminetto/post-testes-go/blob/main/person/mysql/mysql_test.go#L36),
+e no final [faz o truncate das tabelas](https://github.com/eminetto/post-testes-go/blob/main/person/mysql/mysql_test.go#L32) e [destrói o container](https://github.com/eminetto/post-testes-go/blob/main/person/mysql/mysql_test.go#L22)
 
 
 #### Executando os testes de integração
@@ -251,7 +251,7 @@ Para reutilizar código e organizar a inicialização dos testes, pode ser utili
 
 #### Exemplo de teste de integração usando o Suite
 
-Neste [PR](https://github.com/PicPay/go-test-workshop/pull/2) é possível ver o uso do Suite em uma versão do exemplo anterior.
+Neste [PR](https://github.com/eminetto/post-testes-go/pull/2) é possível ver o uso do Suite em uma versão do exemplo anterior.
 
 ### Teste end to end
 
@@ -260,7 +260,7 @@ Pense nas interações de alto valor que os usuários terão com seu aplicativo.
 
 #### Exemplos de teste end to end
 
-[internal/http/echo/handler_e2e_test.go](https://github.com/PicPay/go-test-workshop/blob/main/internal/http/echo/handler_e2e_test.go)
+[internal/http/echo/handler_e2e_test.go](https://github.com/eminetto/post-testes-go/blob/main/internal/http/echo/handler_e2e_test.go)
 
 Este teste implementa o fluxo de cadastro e leitura de um usuário. 
 
@@ -302,7 +302,7 @@ A segunda regra é importante para manter seu conjunto de testes rápido. Se voc
 Assim como na escrita de código em geral, criar um código de teste bom e limpo exige muito cuidado. Aqui estão mais algumas dicas para criar um código de teste sustentável:
 
 - O código de teste é tão importante quanto o código de produção. Dê-lhe o mesmo nível de cuidado e atenção. *"este é apenas um código de teste"* não é uma desculpa válida para justificar um código desleixado
-- Teste uma condição por teste. Isso ajuda você a manter seus testes curtos e fáceis de raciocinar. Em Go podemos usar a construção `t.Run`, como [neste exemplo](https://github.com/PicPay/go-test-workshop/blob/main/person/service_test.go#L16).
+- Teste uma condição por teste. Isso ajuda você a manter seus testes curtos e fáceis de raciocinar. Em Go podemos usar a construção `t.Run`, como [neste exemplo](https://github.com/eminetto/post-testes-go/blob/main/person/service_test.go#L16).
 - Usar uma [estrutura bem definida](#estrutura-dos-testes) facilita a construção de testes limpos.
 - A legibilidade importa. Não tente ser excessivamente DRY. A duplicação é aceitável, se melhorar a legibilidade. Tente encontrar um equilíbrio entre o código [DRY e DAMP](https://stackoverflow.com/questions/6453235/what-does-damp-not-dry-mean-when-talking-about-unit-tests?answertab=trending#tab-top)
 
