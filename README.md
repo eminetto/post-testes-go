@@ -1,6 +1,6 @@
 # Testes automatizados em Go
 
-Repositório criado para exemplificar os tipos de testes e boas práticas que podem ser aplicados. Este código foi usado como exemplo neste [post]()
+Repositório criado para exemplificar os tipos de testes e boas práticas que podem ser aplicados. Este código foi usado como exemplo neste [post](https://medium.com/inside-picpay/testes-automatizados-em-go-aa5cf9ed672e)
 
 Baseado na [aplicação](https://github.com/hamvocke/spring-testing) usada como exemplo.
 
